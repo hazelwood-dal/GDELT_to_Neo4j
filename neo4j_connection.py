@@ -1,9 +1,20 @@
 
 import os
 from neo4j import GraphDatabase
+def read_config(file_path):
+    config = {}
+    with open(file_path, 'r') as file:
+        for line in file:
+            line = line.strip()
+            if line and not line.startswith('#'):
+                key, value = line.split('=', 1)
+                config[key] = value
+    return config
 
-URI = "neo4j+s://3bfd8ebc.databases.neo4j.io"
-AUTH = ("neo4j", "bGUw5BwMn0kJ2OsqHtxMufcE60_7qRoOoytCvr2yyd4")
+config = read_config('Neo4j-3bfd8ebc-Created-2024-06-04.txt')
+
+URI = config['NEO4J_URI']
+AUTH = (config['NEO4J_USERNAME'], config['NEO4J_PASSWORD'])
 
 with GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
